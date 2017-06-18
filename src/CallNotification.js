@@ -19,8 +19,7 @@ BackgroundJob.register({
   jobKey: 'aaa',
   job: ()=> 
   { 
-    CallLogs.show((status)=> { 
-    console.log(phnumb);
+    CallLogs.show((status)=> {
     const js= JSON.parse(status)
     const phNum = js[0].phoneNumber
     if(lastnumber !== phNum && phnumb.includes(phNum.toString())){
