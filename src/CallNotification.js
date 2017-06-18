@@ -10,13 +10,9 @@ import PushNotification from 'react-native-push-notification'
 import BackgroundJob from 'react-native-background-job';
 import CallLogs from 'react-native-call-log';
 
+let phnumb= null
+
 let lastnumber=null;
-const ph = [
-    "9860251012",
-    "123456",
-    "12345",
-    "1234"
-];
 
 
 BackgroundJob.register({
@@ -24,9 +20,10 @@ BackgroundJob.register({
   job: ()=> 
   { 
     CallLogs.show((status)=> { 
+    console.log(phnumb);
     const js= JSON.parse(status)
     const phNum = js[0].phoneNumber
-    if(lastnumber !== phNum && ph.includes(phNum.toString())){
+    if(lastnumber !== phNum && phnumb.includes(phNum.toString())){
       PushNotification.localNotification({
         message: `${phNum} is good`
       })
@@ -39,7 +36,14 @@ BackgroundJob.register({
 })
 
 class CallNotification extends Component {
-  componentDidMount() {
+  constructor(props){
+    super(props);
+  }
+
+  componentWillMount(){
+    fetch('http://45.79.70.185:4000/api/providers')
+    .then(res=> res.json())
+    .then(data=> { phnumb= data.map((info)=> info.phoneNumber)})
   }
 
   componentWillUnmount(){
